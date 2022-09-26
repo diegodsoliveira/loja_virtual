@@ -1,5 +1,7 @@
 package com.diego.lojavirtual.model;
 
+import com.diego.lojavirtual.enums.TipoEndereco;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -22,6 +24,17 @@ public class Endereco implements Serializable {
     private String bairro;
     private String uf;
     private String cidade;
+
+    @Enumerated(EnumType.STRING)
+    private TipoEndereco tipoEndereco;
+
+    public TipoEndereco getTipoEndereco() {
+        return tipoEndereco;
+    }
+
+    public void setTipoEndereco(TipoEndereco tipoEndereco) {
+        this.tipoEndereco = tipoEndereco;
+    }
 
     @ManyToOne(targetEntity = Pessoa.class)
     @JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
