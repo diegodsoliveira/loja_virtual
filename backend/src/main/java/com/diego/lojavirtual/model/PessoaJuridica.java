@@ -1,5 +1,6 @@
 package com.diego.lojavirtual.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -10,10 +11,14 @@ import javax.persistence.Table;
 public class PessoaJuridica extends Pessoa {
     private static final long serialVersionUID = 1471400271051147236L;
 
+    @Column(nullable = false)
     private String cnpj;
+    @Column(nullable = false)
     private String inscricaoEstadual;
     private String inscricaoMunicipall;
+    @Column(nullable = false)
     private String nomeFantasia;
+    @Column(nullable = false)
     private String razaoSocial;
     private String categoria;
 
