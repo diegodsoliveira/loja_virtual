@@ -18,6 +18,9 @@ class LojaVirtualApplicationTests {
 
 		acesso.setDescricao("ROLE_ADMIN");
 		acessoService.create(acesso);
+
+		acesso.setDescricao("ROLE_SAC");
+		acessoService.create(acesso);
 	}
 	@Test
 	void contextLoads() {
