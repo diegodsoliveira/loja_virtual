@@ -1,5 +1,6 @@
 package com.diego.lojavirtual;
 
+import com.diego.lojavirtual.controller.AcessoController;
 import com.diego.lojavirtual.model.Acesso;
 import com.diego.lojavirtual.service.AcessoService;
 import org.junit.jupiter.api.Test;
@@ -10,17 +11,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 class LojaVirtualApplicationTests {
 
 	@Autowired
-	private AcessoService acessoService;
+	private AcessoController acessoController;
 
 	@Test
 	public void testaCadastroAcesso() {
 		Acesso acesso = new Acesso();
 
 		acesso.setDescricao("ROLE_ADMIN");
-		acessoService.create(acesso);
+		acessoController.salvarAcesso(acesso);
 
 		acesso.setDescricao("ROLE_SAC");
-		acessoService.create(acesso);
+		acessoController.salvarAcesso(acesso);
 	}
 	@Test
 	void contextLoads() {

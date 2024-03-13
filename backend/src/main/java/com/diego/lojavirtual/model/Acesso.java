@@ -1,8 +1,7 @@
 package com.diego.lojavirtual.model;
 
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
-
-import javax.persistence.*;
 import java.util.Objects;
 
 @Entity

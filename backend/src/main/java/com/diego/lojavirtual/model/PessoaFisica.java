@@ -1,6 +1,6 @@
 package com.diego.lojavirtual.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 

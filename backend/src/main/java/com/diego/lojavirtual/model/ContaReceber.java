@@ -2,7 +2,7 @@ package com.diego.lojavirtual.model;
 
 import com.diego.lojavirtual.enums.StatusContaReceber;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
