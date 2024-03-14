@@ -19,8 +19,8 @@ public class AcessoController {
     private AcessoService acessoService;
 
     @ResponseBody
-    @PostMapping(value = "**/salvarAcesso")
+    @PostMapping(value = "*/salvarAcesso")
     public ResponseEntity<Acesso> salvarAcesso(@RequestBody Acesso obj) {
-        return new ResponseEntity<Acesso>(acessoService.create(obj), HttpStatus.OK);
+        return new ResponseEntity<Acesso>(acessoService.save(obj), HttpStatus.OK);
     }
 }

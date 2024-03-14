@@ -11,7 +11,7 @@ public class AcessoService {
     @Autowired
     private AcessoRepository acessoRepository;
 
-    public Acesso create(Acesso obj) {
+    public Acesso save(Acesso obj) {
         obj.setId(null);
         return acessoRepository.save(obj);
     }
