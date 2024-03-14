@@ -1,6 +1,6 @@
 package com.diego.lojavirtual.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +23,17 @@ public abstract class Pessoa implements Serializable {
     private String email;
     @Column(nullable = false)
     private String telefone;
+
+    @Column(nullable = false)
+    private String tipoPessoa;
+
+    public void setTipoPessoa(String tipoPessoa) {
+        this.tipoPessoa = tipoPessoa;
+    }
+
+    public String getTipoPessoa() {
+        return tipoPessoa;
+    }
 
     @OneToMany(mappedBy = "pessoa", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Endereco> enderecos = new ArrayList<>();

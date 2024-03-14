@@ -2,7 +2,7 @@ package com.diego.lojavirtual.model;
 
 import com.diego.lojavirtual.enums.TipoEndereco;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
