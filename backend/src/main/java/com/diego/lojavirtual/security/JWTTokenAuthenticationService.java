@@ -3,7 +3,6 @@ package com.diego.lojavirtual.security;
 import com.diego.lojavirtual.ApplicationContextLoad;
 import com.diego.lojavirtual.model.Usuario;
 import com.diego.lojavirtual.repository.UsuarioRepository;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,20 +24,20 @@ public class JWTTokenAuthenticationService {
     private static final String TOKEN_PREFIX = "Bearer";
     private static final String HEADER_STRING = "Authorization";
 
-    public void addAuthentication(HttpServletResponse response, String username) throws IOException {
+    public void addAuthentication(HttpServletResponse response, String username) throws Exception {
         String JWT = Jwts.builder()
                 .setSubject(username)
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, SECRET).compact();
 
         String token = TOKEN_PREFIX + "" + JWT;
+
         response.addHeader(HEADER_STRING, token);
+
+        liberacaoCors(response);
 
         response.getWriter().write("{\"Authorization\": \"" + token + "\"}");
 
-        ApplicationContextLoad.getApplicationContext().getBean(UsuarioRepository.class).atualizaTokenUser(JWT,username);
-
-        liberacaoCors(response);
 
     }
 
@@ -46,14 +45,12 @@ public class JWTTokenAuthenticationService {
 
         String token = request.getHeader(HEADER_STRING);
 
-        try {
             if (token != null) {
 
                 String tokenLimpo = token.replace(TOKEN_PREFIX, "").trim();
 
                 // descompacta o token e retorna o usuário pai
-                String user = Jwts
-                        .parser()
+                String user = Jwts.parser()
                         .setSigningKey(SECRET)
                         .parseClaimsJws(tokenLimpo)
                         .getBody().getSubject();
@@ -66,21 +63,13 @@ public class JWTTokenAuthenticationService {
 
                     if (usuario != null) {
 
-                        if (usuario.getToken().equalsIgnoreCase(tokenLimpo)) {
-
                             return new UsernamePasswordAuthenticationToken(
                                     usuario.getLogin(),
                                     usuario.getSenha(),
                                     usuario.getAuthorities());
-                        }
                     }
                 }
             }
-        } catch (ExpiredJwtException e) {
-            try {
-                response.getOutputStream().println("Token expirado: faça login ou informe um novo token");
-            } catch (IOException ex) { }
-        }
         liberacaoCors(response);
         return null;
     }

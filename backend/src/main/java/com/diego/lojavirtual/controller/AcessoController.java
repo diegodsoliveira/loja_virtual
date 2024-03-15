@@ -21,6 +21,8 @@ public class AcessoController {
     @ResponseBody
     @PostMapping(value = "*/salvarAcesso")
     public ResponseEntity<Acesso> salvarAcesso(@RequestBody Acesso obj) {
-        return new ResponseEntity<Acesso>(acessoService.save(obj), HttpStatus.OK);
+
+        Acesso acessoSalvo = acessoService.save(obj);
+        return new ResponseEntity<Acesso>(acessoSalvo, HttpStatus.OK);
     }
 }
