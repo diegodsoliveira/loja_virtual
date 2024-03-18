@@ -3,8 +3,10 @@ package com.diego.lojavirtual.security;
 import com.diego.lojavirtual.ApplicationContextLoad;
 import com.diego.lojavirtual.model.Usuario;
 import com.diego.lojavirtual.repository.UsuarioRepository;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -30,7 +32,7 @@ public class JWTTokenAuthenticationService {
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, SECRET).compact();
 
-        String token = TOKEN_PREFIX + "" + JWT;
+        String token = TOKEN_PREFIX + " " + JWT;
 
         response.addHeader(HEADER_STRING, token);
 
@@ -41,9 +43,11 @@ public class JWTTokenAuthenticationService {
 
     }
 
-    public Authentication getAuthentication(HttpServletRequest request, HttpServletResponse response) {
+    public Authentication getAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String token = request.getHeader(HEADER_STRING);
+
+        try {
 
             if (token != null) {
 
@@ -63,14 +67,21 @@ public class JWTTokenAuthenticationService {
 
                     if (usuario != null) {
 
-                            return new UsernamePasswordAuthenticationToken(
-                                    usuario.getLogin(),
-                                    usuario.getSenha(),
-                                    usuario.getAuthorities());
+                        return new UsernamePasswordAuthenticationToken(
+                                usuario.getLogin(),
+                                usuario.getSenha(),
+                                usuario.getAuthorities());
                     }
                 }
             }
-        liberacaoCors(response);
+        } catch (SignatureException e) {
+            response.getWriter().write("Token inválido!");
+        } catch (ExpiredJwtException e) {
+            response.getWriter().write("Token expirado. Efetue o login novamente.");
+        }
+        finally {
+            liberacaoCors(response);
+        }
         return null;
     }
 

@@ -3,6 +3,7 @@ package com.diego.lojavirtual.security;
 import com.diego.lojavirtual.model.Usuario;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -43,5 +44,15 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+
+        if (failed instanceof BadCredentialsException) {
+            response.getWriter().write("Usuário e/ou senha inválido.");
+        } else {
+            response.getWriter().write("Falha ao logar: " + failed.getMessage());
+        }
     }
 }
