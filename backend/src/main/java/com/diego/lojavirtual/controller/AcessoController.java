@@ -27,10 +27,17 @@ public class AcessoController {
 
     @ResponseBody
     @PostMapping(value = "**/salvarAcesso")
-    public ResponseEntity<Acesso> save(@RequestBody Acesso acesso) {
+    public ResponseEntity<?> save(@RequestBody Acesso acesso) {
+
+        if (acesso.getId() == null) {
+            List<Acesso> acessos = acessoRepository.buscarAcessoDesc(acesso.getDescricao());
+
+            if (!acessos.isEmpty()) {
+                return ResponseEntity.badRequest().body("Este tipo de acesso já existe.");
+            }
+        }
 
         Acesso acessoSalvo = acessoService.save(acesso);
-
         return new ResponseEntity<Acesso>(acessoSalvo, HttpStatus.OK);
     }
 
