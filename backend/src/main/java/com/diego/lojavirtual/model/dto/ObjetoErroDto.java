@@ -1,7 +1,6 @@
 package com.diego.lojavirtual.model.dto;
 
 
-import java.io.Serial;
 import java.io.Serializable;
 
 public class ObjetoErroDto implements Serializable {
