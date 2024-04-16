@@ -62,14 +62,14 @@ public class AcessoController {
 
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("**/deleteAcesso")
     @ResponseBody
-    public ResponseEntity<String> delete(@PathVariable("id") Long idAcesso) {
-        Optional<Acesso> acesso = acessoRepository.findById(idAcesso);
+    public ResponseEntity<String> delete(@RequestBody Acesso acesso) {
+        Optional<Acesso> optional = acessoRepository.findById(acesso.getId());
 
-        if (acesso.isPresent()) {
-            acessoRepository.deleteById(idAcesso);
-            return ResponseEntity.ok().body("Acesso " + acesso.get().getDescricao() + " deletado com sucesso.");
+        if (optional.isPresent()) {
+            acessoRepository.deleteById(acesso.getId());
+            return ResponseEntity.ok().body("Acesso " + optional.get().getDescricao() + " deletado com sucesso.");
         } else {
             return ResponseEntity.badRequest().body("Acesso não encontrado.");
         }
