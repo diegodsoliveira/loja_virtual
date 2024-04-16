@@ -17,11 +17,18 @@ public class JWTApiAuthenticationFilter extends GenericFilterBean {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
 
-        Authentication authentication = new JWTTokenAuthenticationService()
-                .getAuthentication((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse);
+        try {
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            Authentication authentication = new JWTTokenAuthenticationService()
+                    .getAuthentication((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse);
 
-        filterChain.doFilter(servletRequest, servletResponse);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            filterChain.doFilter(servletRequest, servletResponse);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            servletResponse.getWriter().write("Ocorreu um erro no sistema. Procure o administrador: \n" + e.getMessage());
+        }
     }
 }

@@ -37,6 +37,8 @@ public class Usuario implements UserDetails {
                     foreignKey = @ForeignKey(name = "acesso_fk", value = ConstraintMode.CONSTRAINT)))
     private List<Acesso> acessos;
 
+    private String token;
+
     @ManyToOne(targetEntity = Pessoa.class)
     @JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
     private Pessoa pessoa;
@@ -135,5 +137,13 @@ public class Usuario implements UserDetails {
     @Override
     public int hashCode() {
         return Objects.hash(getId());
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

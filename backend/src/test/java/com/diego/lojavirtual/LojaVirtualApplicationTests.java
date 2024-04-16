@@ -18,10 +18,10 @@ class LojaVirtualApplicationTests {
 		Acesso acesso = new Acesso();
 
 		acesso.setDescricao("ROLE_ADMIN");
-		acessoController.salvarAcesso(acesso);
+		acessoController.save(acesso);
 
 		acesso.setDescricao("ROLE_SAC");
-		acessoController.salvarAcesso(acesso);
+		acessoController.save(acesso);
 	}
 	@Test
 	void contextLoads() {

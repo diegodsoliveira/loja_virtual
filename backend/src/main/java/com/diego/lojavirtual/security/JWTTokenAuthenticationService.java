@@ -36,6 +36,8 @@ public class JWTTokenAuthenticationService {
 
         response.addHeader(HEADER_STRING, token);
 
+        ApplicationContextLoad.getApplicationContext().getBean(UsuarioRepository.class).atualizaTokenUser(JWT, username);
+
         liberacaoCors(response);
 
         response.getWriter().write("{\"Authorization\": \"" + token + "\"}");
@@ -77,7 +79,12 @@ public class JWTTokenAuthenticationService {
         } catch (SignatureException e) {
             response.getWriter().write("Token inválido!");
         } catch (ExpiredJwtException e) {
-            response.getWriter().write("Token expirado. Efetue o login novamente.");
+
+            try {
+                response.getWriter().write("Token expirado. Efetue o login novamente.");
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
         finally {
             liberacaoCors(response);

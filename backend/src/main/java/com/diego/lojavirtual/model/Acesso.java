@@ -18,6 +18,15 @@ public class Acesso implements GrantedAuthority {
     @Column(nullable = false)
     private String descricao; // ROLE_ADMIN...
 
+    public Acesso(Acesso usuario) {
+        this.id = usuario.getId();
+        this.descricao = usuario.getDescricao();
+    }
+
+    public Acesso() {
+
+    }
+
     @Override
     public String getAuthority() {
         return this.descricao;
