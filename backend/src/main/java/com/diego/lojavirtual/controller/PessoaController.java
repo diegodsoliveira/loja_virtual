@@ -3,6 +3,7 @@ package com.diego.lojavirtual.controller;
 import com.diego.lojavirtual.CustomException;
 import com.diego.lojavirtual.model.PessoaJuridica;
 import com.diego.lojavirtual.repository.PessoaJuridicaRepository;
+import com.diego.lojavirtual.service.PessoaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +23,11 @@ public class PessoaController {
     @Autowired
     public PessoaJuridicaRepository pessoaJuridicaRepository;
 
+    @Autowired public PessoaService pessoaService;
+
     @ResponseBody
     @PostMapping(value = "**/salvarPessoaJuridica")
-    public ResponseEntity<PessoaJuridica> save(@RequestBody PessoaJuridica pessoaJuridica) throws CustomException {
+    public ResponseEntity<PessoaJuridica> salvarPessoaJuridica(@RequestBody PessoaJuridica pessoaJuridica) throws CustomException {
 
         if (pessoaJuridica == null) {
             throw new CustomException("Pessoa jurídica não pode ser NULL");
@@ -34,7 +37,7 @@ public class PessoaController {
             throw new CustomException("Já existe CNPJ cadastrado com o número: " + pessoaJuridica.getCnpj());
         }
 
+        return  new ResponseEntity<>(pessoaService.save(pessoaJuridica), HttpStatus.OK);
 
-        return new ResponseEntity<PessoaJuridica>(pessoaJuridica, HttpStatus.OK);
     }
 }

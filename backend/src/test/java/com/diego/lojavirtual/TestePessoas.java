@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Calendar;
+
 @SpringBootTest(classes = LojaVirtualApplication.class)
 public class TestePessoas extends TestCase {
 
@@ -18,7 +20,7 @@ public class TestePessoas extends TestCase {
 
         PessoaJuridica pessoaJuridica = new PessoaJuridica();
 
-        pessoaJuridica.setCnpj("6546465645654");
+        pessoaJuridica.setCnpj("" + Calendar.getInstance().getTimeInMillis());
         pessoaJuridica.setTipoPessoa("Jurídica");
         pessoaJuridica.setInscricaoEstadual("1238128973980");
         pessoaJuridica.setNomeFantasia("Teste Corporation");
@@ -28,7 +30,7 @@ public class TestePessoas extends TestCase {
         pessoaJuridica.setTelefone("8977981239");
         pessoaJuridica.setRazaoSocial("Teste Corporation");
 
-        pessoaController.save(pessoaJuridica);
+        pessoaController.salvarPessoaJuridica(pessoaJuridica);
 
     }
 
