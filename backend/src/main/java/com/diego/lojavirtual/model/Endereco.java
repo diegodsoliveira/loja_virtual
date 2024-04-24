@@ -1,6 +1,7 @@
 package com.diego.lojavirtual.model;
 
 import com.diego.lojavirtual.enums.TipoEndereco;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -55,6 +56,7 @@ public class Endereco implements Serializable {
         this.tipoEndereco = tipoEndereco;
     }
 
+    @JsonIgnore
     @ManyToOne(targetEntity = Pessoa.class)
     @JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
     private Pessoa pessoa;

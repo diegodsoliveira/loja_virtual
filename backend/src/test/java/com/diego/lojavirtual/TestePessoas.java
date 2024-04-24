@@ -1,6 +1,7 @@
 package com.diego.lojavirtual;
 
 import com.diego.lojavirtual.controller.PessoaController;
+import com.diego.lojavirtual.model.PessoaFisica;
 import com.diego.lojavirtual.model.PessoaJuridica;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
@@ -26,11 +27,26 @@ public class TestePessoas extends TestCase {
         pessoaJuridica.setNomeFantasia("Teste Corporation");
         pessoaJuridica.setInscricaoMunicipall("901298073");
         pessoaJuridica.setNome("Diego Oliveira");
-        pessoaJuridica.setEmail("diegodsoliveira@gmail.com");
+        pessoaJuridica.setEmail("testesalvarpj@gmail.com");
         pessoaJuridica.setTelefone("8977981239");
         pessoaJuridica.setRazaoSocial("Teste Corporation");
 
         pessoaController.salvarPessoaJuridica(pessoaJuridica);
+
+    }
+
+    @Test
+    public void testeCadPessoaFisica() throws CustomException {
+
+        PessoaFisica pessoaFisica = new PessoaFisica();
+
+        pessoaFisica.setCpf("" + Calendar.getInstance().getTimeInMillis());
+        pessoaFisica.setTipoPessoa("Física");
+        pessoaFisica.setNome("Usuário teste");
+        pessoaFisica.setEmail("teste@teste.com");
+        pessoaFisica.setTelefone("8977981239");
+
+        pessoaController.salvarPessoaFisica(pessoaFisica);
 
     }
 

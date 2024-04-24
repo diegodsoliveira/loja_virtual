@@ -1,7 +1,9 @@
 package com.diego.lojavirtual.service;
 
+import com.diego.lojavirtual.model.PessoaFisica;
 import com.diego.lojavirtual.model.PessoaJuridica;
 import com.diego.lojavirtual.model.Usuario;
+import com.diego.lojavirtual.repository.PessoaFisicaRepository;
 import com.diego.lojavirtual.repository.PessoaJuridicaRepository;
 import com.diego.lojavirtual.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,15 @@ public class PessoaService {
     @Autowired
     private PessoaJuridicaRepository pessoaJuridicaRepository;
 
-    public PessoaJuridica save(PessoaJuridica pessoaJuridica) {
+    @Autowired private PessoaFisicaRepository pessoaFisicaRepository;
+
+    public PessoaJuridica salvarPessoaJuridica(PessoaJuridica pessoaJuridica) {
+
+        for (int i = 0; i < pessoaJuridica.getEnderecos().size(); i++) {
+            pessoaJuridica.getEnderecos().get(i).setPessoa(pessoaJuridica);
+            pessoaJuridica.getEnderecos().get(i).setEmpresa(pessoaJuridica);
+        }
+
         pessoaJuridica = pessoaJuridicaRepository.save(pessoaJuridica);
 
         Usuario usuarioPj = usuarioRepository.findUserByPessoa(pessoaJuridica.getId(), pessoaJuridica.getEmail());
@@ -48,6 +58,35 @@ public class PessoaService {
         }
 
         return pessoaJuridica;
+    }
+
+    public PessoaFisica salvarPessoaFisica(PessoaFisica pessoaFisica) {
+        pessoaFisica = pessoaFisicaRepository.save(pessoaFisica);
+
+        Usuario usuarioPf = usuarioRepository.findUserByPessoa(pessoaFisica.getId(), pessoaFisica.getEmail());
+
+        if (usuarioPf == null) {
+            String constraint = usuarioRepository.consultaConstraintRole();
+            if (constraint != null) {
+                jdbcTemplate.execute("begin; alter table usuario_acesso drop CONSTRAINT " + constraint + "; commit;");
+            }
+
+            usuarioPf = new Usuario();
+            usuarioPf.setDataAtualSenha(Calendar.getInstance().getTime());
+            usuarioPf.setPessoa(pessoaFisica);
+            usuarioPf.setEmpresa(pessoaFisica);
+            usuarioPf.setLogin(pessoaFisica.getEmail());
+
+            String senha = "" + Calendar.getInstance().getTimeInMillis();
+            String senhaCript = new BCryptPasswordEncoder().encode(senha);
+
+            usuarioPf.setSenha(senhaCript);
+            usuarioPf = usuarioRepository.save(usuarioPf);
+
+            usuarioRepository.insereAcessoUsuarioPj(usuarioPf.getId());
+        }
+
+        return pessoaFisica;
     }
 
 }

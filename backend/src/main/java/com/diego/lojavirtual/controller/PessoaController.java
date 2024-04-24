@@ -1,7 +1,9 @@
 package com.diego.lojavirtual.controller;
 
 import com.diego.lojavirtual.CustomException;
+import com.diego.lojavirtual.model.PessoaFisica;
 import com.diego.lojavirtual.model.PessoaJuridica;
+import com.diego.lojavirtual.repository.PessoaFisicaRepository;
 import com.diego.lojavirtual.repository.PessoaJuridicaRepository;
 import com.diego.lojavirtual.service.PessoaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,8 @@ public class PessoaController {
     @Autowired
     public PessoaJuridicaRepository pessoaJuridicaRepository;
 
+    @Autowired public PessoaFisicaRepository pessoaFisicaRepository;
+
     @Autowired public PessoaService pessoaService;
 
     @ResponseBody
@@ -37,7 +41,23 @@ public class PessoaController {
             throw new CustomException("Já existe CNPJ cadastrado com o número: " + pessoaJuridica.getCnpj());
         }
 
-        return  new ResponseEntity<>(pessoaService.save(pessoaJuridica), HttpStatus.OK);
+        return  new ResponseEntity<>(pessoaService.salvarPessoaJuridica(pessoaJuridica), HttpStatus.OK);
+
+    }
+
+    @ResponseBody
+    @PostMapping(value = "**/salvarPessoaFisica")
+    public ResponseEntity<PessoaFisica> salvarPessoaFisica(@RequestBody PessoaFisica pessoaFisica) throws CustomException {
+
+        if (pessoaFisica == null) {
+            throw new CustomException("Pessoa física não pode ser NULL");
+        }
+
+        if (pessoaFisica.getId() == null && pessoaFisicaRepository.existeCpfCadastrado(pessoaFisica.getCpf()) != null) {
+            throw new CustomException("Já existe CPF cadastrado com o número: " + pessoaFisica.getCpf());
+        }
+
+        return  new ResponseEntity<>(pessoaService.salvarPessoaFisica(pessoaFisica), HttpStatus.OK);
 
     }
 }
