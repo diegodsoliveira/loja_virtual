@@ -5,6 +5,7 @@ import com.diego.lojavirtual.model.PessoaFisica;
 import com.diego.lojavirtual.model.PessoaJuridica;
 import com.diego.lojavirtual.repository.PessoaFisicaRepository;
 import com.diego.lojavirtual.repository.PessoaJuridicaRepository;
+import com.diego.lojavirtual.service.EmailService;
 import com.diego.lojavirtual.service.PessoaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,11 +24,11 @@ import javax.transaction.Transactional;
 public class PessoaController {
 
     @Autowired
-    public PessoaJuridicaRepository pessoaJuridicaRepository;
+    private PessoaJuridicaRepository pessoaJuridicaRepository;
 
-    @Autowired public PessoaFisicaRepository pessoaFisicaRepository;
+    @Autowired private PessoaFisicaRepository pessoaFisicaRepository;
 
-    @Autowired public PessoaService pessoaService;
+    @Autowired private PessoaService pessoaService;
 
     @ResponseBody
     @PostMapping(value = "**/salvarPessoaJuridica")

@@ -11,6 +11,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 
 @Service
@@ -20,10 +22,12 @@ public class PessoaService {
 
     @Autowired private UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private PessoaJuridicaRepository pessoaJuridicaRepository;
+    @Autowired private PessoaJuridicaRepository pessoaJuridicaRepository;
 
     @Autowired private PessoaFisicaRepository pessoaFisicaRepository;
+
+    @Autowired private EmailService emailService;
+
 
     public PessoaJuridica salvarPessoaJuridica(PessoaJuridica pessoaJuridica) {
 
@@ -84,6 +88,21 @@ public class PessoaService {
             usuarioPf = usuarioRepository.save(usuarioPf);
 
             usuarioRepository.insereAcessoUsuarioPj(usuarioPf.getId());
+
+            StringBuilder mensagem = new StringBuilder();
+            mensagem.append("<b>Seja bem vindo à loja virtual XYZ</b><br><br>");
+            mensagem.append("dados para acesso ao site<br>");
+            mensagem.append("login: ").append(usuarioPf.getLogin()).append("<br>");
+            mensagem.append("senha: ").append(senha).append("<br><br>");
+            mensagem.append("Este é um email teste.");
+
+            try {
+                emailService.enviarEmailHtml("Usuário criado na loja virtual", mensagem.toString(), pessoaFisica.getEmail());
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
 
         return pessoaFisica;
