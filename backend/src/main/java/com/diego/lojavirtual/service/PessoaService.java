@@ -1,5 +1,6 @@
 package com.diego.lojavirtual.service;
 
+import com.diego.lojavirtual.enums.TipoAcesso;
 import com.diego.lojavirtual.model.PessoaFisica;
 import com.diego.lojavirtual.model.PessoaJuridica;
 import com.diego.lojavirtual.model.Usuario;
@@ -58,7 +59,8 @@ public class PessoaService {
             usuarioPj.setSenha(senhaCript);
             usuarioPj = usuarioRepository.save(usuarioPj);
 
-            usuarioRepository.insereAcessoUsuarioPj(usuarioPj.getId());
+            usuarioRepository.insereAcessoUsuarioPj(usuarioPj.getId(), TipoAcesso.USER.toString());
+            usuarioRepository.insereAcessoUsuarioPj(usuarioPj.getId(), TipoAcesso.ADMIN.toString());
         }
 
         return pessoaJuridica;
@@ -87,7 +89,7 @@ public class PessoaService {
             usuarioPf.setSenha(senhaCript);
             usuarioPf = usuarioRepository.save(usuarioPf);
 
-            usuarioRepository.insereAcessoUsuarioPj(usuarioPf.getId());
+            usuarioRepository.insereAcessoUsuarioPj(usuarioPf.getId(), TipoAcesso.USER.toString());
 
             StringBuilder mensagem = new StringBuilder();
             mensagem.append("<b>Seja bem vindo à loja virtual XYZ</b><br><br>");
