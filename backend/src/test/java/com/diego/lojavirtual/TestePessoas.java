@@ -3,7 +3,6 @@ package com.diego.lojavirtual;
 import com.diego.lojavirtual.controller.PessoaController;
 import com.diego.lojavirtual.model.PessoaFisica;
 import com.diego.lojavirtual.model.PessoaJuridica;
-import com.diego.lojavirtual.service.EmailService;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
