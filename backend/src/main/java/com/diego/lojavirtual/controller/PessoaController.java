@@ -7,6 +7,8 @@ import com.diego.lojavirtual.repository.PessoaFisicaRepository;
 import com.diego.lojavirtual.repository.PessoaJuridicaRepository;
 import com.diego.lojavirtual.service.EmailService;
 import com.diego.lojavirtual.service.PessoaService;
+import com.diego.lojavirtual.util.ValidaCnpj;
+import com.diego.lojavirtual.util.ValidaCpf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +48,10 @@ public class PessoaController {
             throw new CustomException("Já existe inscrição estadual cadastrada com o número: " + pessoaJuridica.getInscricaoEstadual());
         }
 
+        if (!ValidaCnpj.isCNPJ(pessoaJuridica.getCnpj())) {
+            throw new CustomException("Este número de CNPJ é inválido: " + pessoaJuridica.getCnpj());
+        }
+
         return  new ResponseEntity<>(pessoaService.salvarPessoaJuridica(pessoaJuridica), HttpStatus.OK);
 
     }
@@ -60,6 +66,10 @@ public class PessoaController {
 
         if (pessoaFisica.getId() == null && pessoaFisicaRepository.existeCpfCadastrado(pessoaFisica.getCpf()) != null) {
             throw new CustomException("Já existe CPF cadastrado com o número: " + pessoaFisica.getCpf());
+        }
+
+        if (!ValidaCpf.isCPF(pessoaFisica.getCpf())) {
+            throw new CustomException("Este número de CPF é inválido: " + pessoaFisica.getCpf());
         }
 
         return  new ResponseEntity<>(pessoaService.salvarPessoaFisica(pessoaFisica), HttpStatus.OK);

@@ -59,14 +59,18 @@ public class PessoaService {
             usuarioPj.setSenha(senhaCript);
             usuarioPj = usuarioRepository.save(usuarioPj);
 
-            usuarioRepository.insereAcessoUsuarioPj(usuarioPj.getId(), TipoAcesso.USER.toString());
-            usuarioRepository.insereAcessoUsuarioPj(usuarioPj.getId(), TipoAcesso.ADMIN.toString());
+            usuarioRepository.insereAcessoUsuario(usuarioPj.getId(), TipoAcesso.USER.toString());
+            usuarioRepository.insereAcessoUsuario(usuarioPj.getId(), TipoAcesso.ADMIN.toString());
         }
 
         return pessoaJuridica;
     }
 
     public PessoaFisica salvarPessoaFisica(PessoaFisica pessoaFisica) {
+        for (int i = 0; i < pessoaFisica.getEnderecos().size(); i++) {
+            pessoaFisica.getEnderecos().get(i).setPessoa(pessoaFisica);
+        }
+
         pessoaFisica = pessoaFisicaRepository.save(pessoaFisica);
 
         Usuario usuarioPf = usuarioRepository.findUserByPessoa(pessoaFisica.getId(), pessoaFisica.getEmail());
@@ -89,7 +93,7 @@ public class PessoaService {
             usuarioPf.setSenha(senhaCript);
             usuarioPf = usuarioRepository.save(usuarioPf);
 
-            usuarioRepository.insereAcessoUsuarioPj(usuarioPf.getId(), TipoAcesso.USER.toString());
+            usuarioRepository.insereAcessoUsuario(usuarioPf.getId(), TipoAcesso.USER.toString());
 
             StringBuilder mensagem = new StringBuilder();
             mensagem.append("<b>Seja bem vindo à loja virtual XYZ</b><br><br>");

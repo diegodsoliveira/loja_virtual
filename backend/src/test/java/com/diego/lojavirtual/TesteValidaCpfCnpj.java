@@ -11,12 +11,13 @@ public class TesteValidaCpfCnpj {
     @Test
     public static void main(String[] args) {
 
-        boolean isCNPJ = ValidaCnpj.isCNPJ("77.444.836/0001-02");
+        boolean isCNPJ = ValidaCnpj.isCNPJ("38.557.576/0001-27");
 
         System.out.println("CNPJ é válido: " + isCNPJ);
 
-        boolean isCPF = ValidaCpf.isCPF("401.242.080-10");
+        boolean isCPF = ValidaCpf.isCPF("977.128.220-42");
 
         System.out.println("CPF é válido: " + isCPF);
+
     }
 }

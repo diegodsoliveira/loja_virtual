@@ -3,6 +3,7 @@ package com.diego.lojavirtual;
 import com.diego.lojavirtual.controller.PessoaController;
 import com.diego.lojavirtual.model.PessoaFisica;
 import com.diego.lojavirtual.model.PessoaJuridica;
+import com.diego.lojavirtual.repository.PessoaJuridicaRepository;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,9 @@ import java.util.Calendar;
 public class TestePessoas extends TestCase {
 
     @Autowired
-    public PessoaController pessoaController;
+    private PessoaController pessoaController;
+
+    @Autowired private PessoaJuridicaRepository pessoaJuridicaRepository;
 
     @Test
     public void testeCadPessoaJuridica() throws CustomException {
@@ -40,11 +43,14 @@ public class TestePessoas extends TestCase {
 
         PessoaFisica pessoaFisica = new PessoaFisica();
 
-        pessoaFisica.setCpf("" + Calendar.getInstance().getTimeInMillis());
+        PessoaJuridica pessoaJuridica = pessoaJuridicaRepository.existeCnpjCadastrado("1713971777615");
+
+        pessoaFisica.setCpf("664.746.060-88");
         pessoaFisica.setTipoPessoa("Física");
         pessoaFisica.setNome("Usuário teste");
-        pessoaFisica.setEmail("teste@teste.com");
+        pessoaFisica.setEmail("teste321@teste.com");
         pessoaFisica.setTelefone("8977981239");
+        pessoaFisica.setEmpresa(pessoaJuridica);
 
         pessoaController.salvarPessoaFisica(pessoaFisica);
 
