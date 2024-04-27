@@ -1,6 +1,9 @@
 package com.diego.lojavirtual.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +20,17 @@ public abstract class Pessoa implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_pessoa")
     private Long Id;
 
+    @NotBlank(message = "Nome é obrigatório.")
+    @NotNull(message = "Nome é obrigatório.")
     @Column(nullable = false)
     private String nome;
+
+    @NotBlank(message = "Email é obrigatório.")
+    @NotNull(message = "Email é obrigatório.")
+    @Email(message = "Email inválido.")
     @Column(nullable = false)
     private String email;
+
     @Column(nullable = false)
     private String telefone;
 

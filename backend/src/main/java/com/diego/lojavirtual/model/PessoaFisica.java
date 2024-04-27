@@ -1,6 +1,10 @@
 package com.diego.lojavirtual.model;
 
+import org.hibernate.validator.constraints.br.CPF;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Objects;
 
@@ -10,6 +14,9 @@ import java.util.Objects;
 public class PessoaFisica extends Pessoa {
     private static final long serialVersionUID = 796603266994026880L;
 
+    @NotBlank(message = "CPF é obrigatório.")
+    @NotNull(message = "CPF é obrigatório.")
+    @CPF(message = "CPF inválido.")
     @Column(nullable = false)
     private String cpf;
 

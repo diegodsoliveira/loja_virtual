@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 @Controller
 @RestController
@@ -58,7 +59,7 @@ public class PessoaController {
 
     @ResponseBody
     @PostMapping(value = "**/salvarPessoaFisica")
-    public ResponseEntity<PessoaFisica> salvarPessoaFisica(@RequestBody PessoaFisica pessoaFisica) throws CustomException {
+    public ResponseEntity<PessoaFisica> salvarPessoaFisica(@RequestBody @Valid PessoaFisica pessoaFisica) throws CustomException {
 
         if (pessoaFisica == null) {
             throw new CustomException("Pessoa física não pode ser NULL");
