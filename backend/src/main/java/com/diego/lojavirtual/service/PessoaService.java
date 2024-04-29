@@ -4,13 +4,16 @@ import com.diego.lojavirtual.enums.TipoAcesso;
 import com.diego.lojavirtual.model.PessoaFisica;
 import com.diego.lojavirtual.model.PessoaJuridica;
 import com.diego.lojavirtual.model.Usuario;
+import com.diego.lojavirtual.model.dto.CepDTO;
 import com.diego.lojavirtual.repository.PessoaFisicaRepository;
 import com.diego.lojavirtual.repository.PessoaJuridicaRepository;
 import com.diego.lojavirtual.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
@@ -112,6 +115,10 @@ public class PessoaService {
         }
 
         return pessoaFisica;
+    }
+
+    public CepDTO consultaCep(String cep) {
+        return new RestTemplate().getForEntity("https://viacep.com.br/ws/"+cep+"/json/", CepDTO.class).getBody();
     }
 
 }

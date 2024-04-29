@@ -3,9 +3,9 @@ package com.diego.lojavirtual.controller;
 import com.diego.lojavirtual.CustomException;
 import com.diego.lojavirtual.model.PessoaFisica;
 import com.diego.lojavirtual.model.PessoaJuridica;
+import com.diego.lojavirtual.model.dto.CepDTO;
 import com.diego.lojavirtual.repository.PessoaFisicaRepository;
 import com.diego.lojavirtual.repository.PessoaJuridicaRepository;
-import com.diego.lojavirtual.service.EmailService;
 import com.diego.lojavirtual.service.PessoaService;
 import com.diego.lojavirtual.util.ValidaCnpj;
 import com.diego.lojavirtual.util.ValidaCpf;
@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -34,8 +31,16 @@ public class PessoaController {
     @Autowired private PessoaService pessoaService;
 
     @ResponseBody
+    @GetMapping(value = "**/consultaCep/{cep}")
+    public ResponseEntity<CepDTO> consultaCep(@PathVariable("cep") String cep) {
+
+        return new ResponseEntity<CepDTO>(pessoaService.consultaCep(cep), HttpStatus.OK);
+
+    }
+
+    @ResponseBody
     @PostMapping(value = "**/salvarPessoaJuridica")
-    public ResponseEntity<PessoaJuridica> salvarPessoaJuridica(@RequestBody PessoaJuridica pessoaJuridica) throws CustomException {
+    public ResponseEntity<PessoaJuridica> salvarPessoaJuridica(@RequestBody @Valid PessoaJuridica pessoaJuridica) throws CustomException {
 
         if (pessoaJuridica == null) {
             throw new CustomException("Pessoa jurídica não pode ser NULL");
