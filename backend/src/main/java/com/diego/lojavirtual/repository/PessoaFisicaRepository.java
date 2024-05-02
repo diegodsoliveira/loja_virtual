@@ -17,4 +17,7 @@ public interface PessoaFisicaRepository extends JpaRepository<PessoaFisica, Long
 
     @Query(value = "select pf from PessoaFisica pf where pf.email = ?1")
     PessoaFisica existeEmailCadastrado(String email);
+
+    @Query(value = "select pf from PessoaFisica pf where upper(trim(pf.nome)) like %?1%")
+    List<PessoaFisica> pesquisaPorNomePf(String nome);
 }

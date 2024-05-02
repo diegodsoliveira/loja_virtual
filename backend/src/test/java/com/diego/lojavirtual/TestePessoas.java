@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Calendar;
+import java.util.List;
 
 @SpringBootTest(classes = LojaVirtualApplication.class)
 public class TestePessoas extends TestCase {
@@ -24,7 +25,7 @@ public class TestePessoas extends TestCase {
 
         PessoaJuridica pessoaJuridica = new PessoaJuridica();
 
-        pessoaJuridica.setCnpj("" + Calendar.getInstance().getTimeInMillis());
+        pessoaJuridica.setCnpj("91.452.568/0001-07");
         pessoaJuridica.setTipoPessoa("Jurídica");
         pessoaJuridica.setInscricaoEstadual("1238128973980");
         pessoaJuridica.setNomeFantasia("Teste Corporation");
@@ -43,14 +44,14 @@ public class TestePessoas extends TestCase {
 
         PessoaFisica pessoaFisica = new PessoaFisica();
 
-        PessoaJuridica pessoaJuridica = pessoaJuridicaRepository.existeCnpjCadastrado("1713971777615");
+        List<PessoaJuridica> pessoaJuridica = pessoaJuridicaRepository.existeCnpjCadastrado("91452568000107");
 
         pessoaFisica.setCpf("664.746.060-88");
         pessoaFisica.setTipoPessoa("Física");
         pessoaFisica.setNome("Usuário teste");
         pessoaFisica.setEmail("teste321@teste.com");
         pessoaFisica.setTelefone("8977981239");
-        pessoaFisica.setEmpresa(pessoaJuridica);
+        pessoaFisica.setEmpresa(pessoaJuridica.getFirst());
 
         pessoaController.salvarPessoaFisica(pessoaFisica);
 

@@ -76,6 +76,7 @@ public class PessoaService {
     public PessoaFisica salvarPessoaFisica(PessoaFisica pessoaFisica) {
         for (int i = 0; i < pessoaFisica.getEnderecos().size(); i++) {
             pessoaFisica.getEnderecos().get(i).setPessoa(pessoaFisica);
+            pessoaFisica.getEnderecos().get(i).setEmpresa(pessoaFisica.getEmpresa());
         }
 
         pessoaFisica.setCpf(ValidaCpf.removeCaracteresCpf(pessoaFisica.getCpf()));
@@ -93,7 +94,7 @@ public class PessoaService {
             usuarioPf = new Usuario();
             usuarioPf.setDataAtualSenha(Calendar.getInstance().getTime());
             usuarioPf.setPessoa(pessoaFisica);
-            usuarioPf.setEmpresa(pessoaFisica);
+            usuarioPf.setEmpresa(pessoaFisica.getEmpresa());
             usuarioPf.setLogin(pessoaFisica.getEmail());
 
             String senha = "" + Calendar.getInstance().getTimeInMillis();

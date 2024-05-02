@@ -1,7 +1,10 @@
 package com.diego.lojavirtual;
 
 import com.diego.lojavirtual.model.dto.ObjetoErroDto;
+import com.diego.lojavirtual.service.EmailService;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,12 +18,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.List;
 
 @RestControllerAdvice
 @ControllerAdvice
 public class ControleExcecoes extends ResponseEntityExceptionHandler {
+
+    @Autowired private EmailService emailService;
 
     @ExceptionHandler({Exception.class, RuntimeException.class, Throwable.class})
     @Override
@@ -44,6 +51,15 @@ public class ControleExcecoes extends ResponseEntityExceptionHandler {
 
         objetoErroDto.setMsgErro(msg);
         objetoErroDto.setCode(status.value() + " ==> " + status.getReasonPhrase());
+
+        ex.printStackTrace();
+        try {
+            emailService.enviarEmailHtml("Erro na loja virtual", ExceptionUtils.getStackTrace(ex), "diegodsoliveira@gmail.com");
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
 
         return new ResponseEntity<>(objetoErroDto, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -69,6 +85,15 @@ public class ControleExcecoes extends ResponseEntityExceptionHandler {
 
         objetoErroDto.setMsgErro(msg);
         objetoErroDto.setCode(HttpStatus.INTERNAL_SERVER_ERROR.toString());
+
+        ex.printStackTrace();
+        try {
+            emailService.enviarEmailHtml("Erro na loja virtual", ExceptionUtils.getStackTrace(ex), "diegodsoliveira@gmail.com");
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
 
         return new ResponseEntity<>(objetoErroDto, HttpStatus.INTERNAL_SERVER_ERROR);
 
