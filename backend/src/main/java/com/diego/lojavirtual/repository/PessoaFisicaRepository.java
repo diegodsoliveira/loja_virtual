@@ -13,5 +13,8 @@ import java.util.List;
 public interface PessoaFisicaRepository extends JpaRepository<PessoaFisica, Long> {
 
     @Query(value = "select pf from PessoaFisica pf where pf.cpf = ?1")
-    public List<PessoaFisica> existeCpfCadastrado(String cpf);
+    List<PessoaFisica> existeCpfCadastrado(String cpf);
+
+    @Query(value = "select pf from PessoaFisica pf where pf.email = ?1")
+    PessoaFisica existeEmailCadastrado(String email);
 }

@@ -57,6 +57,10 @@ public class PessoaController {
             throw new CustomException("Já existe inscrição estadual cadastrada com o número: " + pessoaJuridica.getInscricaoEstadual());
         }
 
+        if (pessoaJuridica.getId() == null && pessoaJuridicaRepository.existeEmailCadastrado(pessoaJuridica.getEmail()) != null) {
+            throw new CustomException("O email informado já está em uso na nossa base de dados: " + pessoaJuridica.getEmail());
+        }
+
         if (!ValidaCnpj.isCNPJ(pessoaJuridica.getCnpj())) {
             throw new CustomException("Este número de CNPJ é inválido: " + pessoaJuridica.getCnpj());
         }
@@ -75,8 +79,11 @@ public class PessoaController {
             pessoaFisica.setCpf(ValidaCpf.removeCaracteresCpf(pessoaFisica.getCpf()));
         }
 
-        if (pessoaFisica.getId() == null && pessoaFisicaRepository.existeCpfCadastrado(pessoaFisica.getCpf()).size() > 0) {
+        if (pessoaFisica.getId() == null && pessoaFisicaRepository.existeEmailCadastrado(pessoaFisica.getEmail()) != null) {
+            throw new CustomException("O email informado já está em uso na nossa base de dados: " + pessoaFisica.getEmail());
+        }
 
+        if (pessoaFisica.getId() == null && pessoaFisicaRepository.existeCpfCadastrado(pessoaFisica.getCpf()).size() > 0) {
             throw new CustomException("Já existe CPF cadastrado com o número: " + pessoaFisica.getCpf());
         }
 
