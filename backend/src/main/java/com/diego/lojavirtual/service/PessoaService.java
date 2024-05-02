@@ -8,6 +8,8 @@ import com.diego.lojavirtual.model.dto.CepDTO;
 import com.diego.lojavirtual.repository.PessoaFisicaRepository;
 import com.diego.lojavirtual.repository.PessoaJuridicaRepository;
 import com.diego.lojavirtual.repository.UsuarioRepository;
+import com.diego.lojavirtual.util.ValidaCnpj;
+import com.diego.lojavirtual.util.ValidaCpf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -39,6 +41,8 @@ public class PessoaService {
             pessoaJuridica.getEnderecos().get(i).setPessoa(pessoaJuridica);
             pessoaJuridica.getEnderecos().get(i).setEmpresa(pessoaJuridica);
         }
+
+        pessoaJuridica.setCnpj(ValidaCnpj.removeCaracteresCnpj(pessoaJuridica.getCnpj()));
 
         pessoaJuridica = pessoaJuridicaRepository.save(pessoaJuridica);
 
@@ -73,6 +77,8 @@ public class PessoaService {
         for (int i = 0; i < pessoaFisica.getEnderecos().size(); i++) {
             pessoaFisica.getEnderecos().get(i).setPessoa(pessoaFisica);
         }
+
+        pessoaFisica.setCpf(ValidaCpf.removeCaracteresCpf(pessoaFisica.getCpf()));
 
         pessoaFisica = pessoaFisicaRepository.save(pessoaFisica);
 

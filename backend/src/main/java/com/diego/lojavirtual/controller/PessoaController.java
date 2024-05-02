@@ -1,6 +1,7 @@
 package com.diego.lojavirtual.controller;
 
 import com.diego.lojavirtual.CustomException;
+import com.diego.lojavirtual.model.Endereco;
 import com.diego.lojavirtual.model.PessoaFisica;
 import com.diego.lojavirtual.model.PessoaJuridica;
 import com.diego.lojavirtual.model.dto.CepDTO;
@@ -44,6 +45,8 @@ public class PessoaController {
 
         if (pessoaJuridica == null) {
             throw new CustomException("Pessoa jurídica não pode ser NULL");
+        } else {
+            pessoaJuridica.setCnpj(ValidaCnpj.removeCaracteresCnpj(pessoaJuridica.getCnpj()));
         }
 
         if (pessoaJuridica.getId() == null && pessoaJuridicaRepository.existeCnpjCadastrado(pessoaJuridica.getCnpj()) != null) {
@@ -68,14 +71,30 @@ public class PessoaController {
 
         if (pessoaFisica == null) {
             throw new CustomException("Pessoa física não pode ser NULL");
+        } else {
+            pessoaFisica.setCpf(ValidaCpf.removeCaracteresCpf(pessoaFisica.getCpf()));
         }
 
-        if (pessoaFisica.getId() == null && pessoaFisicaRepository.existeCpfCadastrado(pessoaFisica.getCpf()) != null) {
+        if (pessoaFisica.getId() == null && pessoaFisicaRepository.existeCpfCadastrado(pessoaFisica.getCpf()).size() > 0) {
+
             throw new CustomException("Já existe CPF cadastrado com o número: " + pessoaFisica.getCpf());
         }
 
         if (!ValidaCpf.isCPF(pessoaFisica.getCpf())) {
             throw new CustomException("Este número de CPF é inválido: " + pessoaFisica.getCpf());
+        }
+
+        if (pessoaFisica.getId() == null || pessoaFisica.getId() <= 0) {
+            for (int i = 0; i < pessoaFisica.getEnderecos().size(); i++) {
+                CepDTO cepDTO = pessoaService.consultaCep(pessoaFisica.getEnderecos().get(i).getCep());
+
+                pessoaFisica.getEnderecos().get(i).setBairro(cepDTO.getBairro());
+                pessoaFisica.getEnderecos().get(i).setCidade(cepDTO.getLocalidade());
+                pessoaFisica.getEnderecos().get(i).setComplemento(cepDTO.getComplemento());
+                pessoaFisica.getEnderecos().get(i).setRuaLogradouro(cepDTO.getLogradouro());
+                pessoaFisica.getEnderecos().get(i).setUf(cepDTO.getUf());
+                pessoaFisica.getEnderecos().get(i).setNumero(cepDTO.getComplemento());
+            }
         }
 
         return  new ResponseEntity<>(pessoaService.salvarPessoaFisica(pessoaFisica), HttpStatus.OK);
