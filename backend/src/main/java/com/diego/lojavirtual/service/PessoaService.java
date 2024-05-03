@@ -1,6 +1,7 @@
 package com.diego.lojavirtual.service;
 
 import com.diego.lojavirtual.enums.TipoAcesso;
+import com.diego.lojavirtual.exceptions.ObjectNotFoundException;
 import com.diego.lojavirtual.model.*;
 import com.diego.lojavirtual.model.dto.CepDTO;
 import com.diego.lojavirtual.model.dto.cnpjws.ConsultaCnpjDTO;
@@ -19,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
+import java.util.Optional;
 
 @Service
 public class PessoaService {
@@ -162,5 +164,10 @@ public class PessoaService {
                 pessoa.getEnderecos().get(i).setNumero(cepDTO.getComplemento());
             }
         }
+    }
+
+    public PessoaJuridica findPjById(Long id) {
+        Optional<PessoaJuridica> obj = pessoaJuridicaRepository.findById(id);
+        return obj.orElseThrow(() -> new ObjectNotFoundException("ID empresa não encontrado. Id: " + id));
     }
 }

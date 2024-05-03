@@ -1,6 +1,6 @@
 package com.diego.lojavirtual.controller;
 
-import com.diego.lojavirtual.CustomException;
+import com.diego.lojavirtual.exceptions.CustomException;
 import com.diego.lojavirtual.enums.TipoPessoa;
 import com.diego.lojavirtual.model.PessoaFisica;
 import com.diego.lojavirtual.model.PessoaJuridica;

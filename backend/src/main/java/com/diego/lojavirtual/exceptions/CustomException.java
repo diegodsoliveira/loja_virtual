@@ -1,4 +1,4 @@
-package com.diego.lojavirtual;
+package com.diego.lojavirtual.exceptions;
 
 import java.io.Serializable;
 

@@ -1,6 +1,7 @@
 package com.diego.lojavirtual;
 
 import com.diego.lojavirtual.controller.PessoaController;
+import com.diego.lojavirtual.exceptions.CustomException;
 import com.diego.lojavirtual.model.PessoaFisica;
 import com.diego.lojavirtual.model.PessoaJuridica;
 import com.diego.lojavirtual.repository.PessoaJuridicaRepository;
@@ -9,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Calendar;
 import java.util.List;
 
 @SpringBootTest(classes = LojaVirtualApplication.class)
