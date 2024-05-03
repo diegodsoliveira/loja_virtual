@@ -1,11 +1,11 @@
 package com.diego.lojavirtual.controller;
 
 import com.diego.lojavirtual.CustomException;
-import com.diego.lojavirtual.model.Endereco;
+import com.diego.lojavirtual.enums.TipoPessoa;
 import com.diego.lojavirtual.model.PessoaFisica;
 import com.diego.lojavirtual.model.PessoaJuridica;
 import com.diego.lojavirtual.model.dto.CepDTO;
-import com.diego.lojavirtual.repository.EnderecoRepository;
+import com.diego.lojavirtual.model.dto.cnpjws.ConsultaCnpjDTO;
 import com.diego.lojavirtual.repository.PessoaFisicaRepository;
 import com.diego.lojavirtual.repository.PessoaJuridicaRepository;
 import com.diego.lojavirtual.service.PessoaService;
@@ -33,13 +33,18 @@ public class PessoaController {
 
     @Autowired private PessoaService pessoaService;
 
-    @Autowired private EnderecoRepository enderecoRepository;
-
     @ResponseBody
     @GetMapping(value = "**/consultaCep/{cep}")
     public ResponseEntity<CepDTO> consultaCep(@PathVariable("cep") String cep) {
 
         return new ResponseEntity<CepDTO>(pessoaService.consultaCep(cep), HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @GetMapping(value = "**/consultaCnpjReceitaWs/{cnpj}")
+    public ResponseEntity<ConsultaCnpjDTO> consultaCnpjReceitaWs(@PathVariable("cnpj") String cnpj) {
+
+        return new ResponseEntity<ConsultaCnpjDTO>(pessoaService.consultaCnpjReceitaWs(cnpj), HttpStatus.OK);
     }
 
     @ResponseBody
@@ -80,6 +85,10 @@ public class PessoaController {
             pessoaJuridica.setCnpj(ValidaCnpj.removeCaracteresCnpj(pessoaJuridica.getCnpj()));
         }
 
+        if (pessoaJuridica.getTipoPessoa() == null) {
+            throw new CustomException("Informe o tipo da pessoa que está sendo cadastrada (ex. JURIDICA)");
+        }
+
         if (pessoaJuridica.getId() == null && pessoaJuridicaRepository.existeCnpjCadastrado(pessoaJuridica.getCnpj()) != null) {
             throw new CustomException("Já existe CNPJ cadastrado com o número: " + pessoaJuridica.getCnpj());
         }
@@ -97,31 +106,10 @@ public class PessoaController {
         }
 
         if (pessoaJuridica.getId() == null || pessoaJuridica.getId() <= 0) {
-            for (int i = 0; i < pessoaJuridica.getEnderecos().size(); i++) {
-                CepDTO cepDTO = pessoaService.consultaCep(pessoaJuridica.getEnderecos().get(i).getCep());
-
-                pessoaJuridica.getEnderecos().get(i).setBairro(cepDTO.getBairro());
-                pessoaJuridica.getEnderecos().get(i).setCidade(cepDTO.getLocalidade());
-                pessoaJuridica.getEnderecos().get(i).setComplemento(cepDTO.getComplemento());
-                pessoaJuridica.getEnderecos().get(i).setRuaLogradouro(cepDTO.getLogradouro());
-                pessoaJuridica.getEnderecos().get(i).setUf(cepDTO.getUf());
-                pessoaJuridica.getEnderecos().get(i).setNumero(cepDTO.getComplemento());
-            }
+            pessoaService.cadastraEndereco(pessoaJuridica);
         } else {
-            for (int i = 0; i < pessoaJuridica.getEnderecos().size(); i++) {
-                Endereco endereco = enderecoRepository.findById(pessoaJuridica.getEnderecos().get(i).getId()).get();
+            pessoaService.atualizaEndereco(pessoaJuridica);
 
-                if (!endereco.getCep().equals(pessoaJuridica.getEnderecos().get(i).getCep())) {
-                    CepDTO cepDTO = pessoaService.consultaCep(pessoaJuridica.getEnderecos().get(i).getCep());
-
-                    pessoaJuridica.getEnderecos().get(i).setBairro(cepDTO.getBairro());
-                    pessoaJuridica.getEnderecos().get(i).setCidade(cepDTO.getLocalidade());
-                    pessoaJuridica.getEnderecos().get(i).setComplemento(cepDTO.getComplemento());
-                    pessoaJuridica.getEnderecos().get(i).setRuaLogradouro(cepDTO.getLogradouro());
-                    pessoaJuridica.getEnderecos().get(i).setUf(cepDTO.getUf());
-                    pessoaJuridica.getEnderecos().get(i).setNumero(cepDTO.getComplemento());
-                }
-            }
         }
 
         return  new ResponseEntity<>(pessoaService.salvarPessoaJuridica(pessoaJuridica), HttpStatus.OK);
@@ -138,6 +126,10 @@ public class PessoaController {
             pessoaFisica.setCpf(ValidaCpf.removeCaracteresCpf(pessoaFisica.getCpf()));
         }
 
+        if (pessoaFisica.getTipoPessoa() == null) {
+            pessoaFisica.setTipoPessoa(TipoPessoa.FISICA.getDescricao());
+        }
+
         if (pessoaFisica.getId() == null && pessoaFisicaRepository.existeEmailCadastrado(pessoaFisica.getEmail()) != null) {
             throw new CustomException("O email informado já está em uso na nossa base de dados: " + pessoaFisica.getEmail());
         }
@@ -151,16 +143,10 @@ public class PessoaController {
         }
 
         if (pessoaFisica.getId() == null || pessoaFisica.getId() <= 0) {
-            for (int i = 0; i < pessoaFisica.getEnderecos().size(); i++) {
-                CepDTO cepDTO = pessoaService.consultaCep(pessoaFisica.getEnderecos().get(i).getCep());
+            pessoaService.cadastraEndereco(pessoaFisica);
+        } else {
+            pessoaService.atualizaEndereco(pessoaFisica);
 
-                pessoaFisica.getEnderecos().get(i).setBairro(cepDTO.getBairro());
-                pessoaFisica.getEnderecos().get(i).setCidade(cepDTO.getLocalidade());
-                pessoaFisica.getEnderecos().get(i).setComplemento(cepDTO.getComplemento());
-                pessoaFisica.getEnderecos().get(i).setRuaLogradouro(cepDTO.getLogradouro());
-                pessoaFisica.getEnderecos().get(i).setUf(cepDTO.getUf());
-                pessoaFisica.getEnderecos().get(i).setNumero(cepDTO.getComplemento());
-            }
         }
 
         return  new ResponseEntity<>(pessoaService.salvarPessoaFisica(pessoaFisica), HttpStatus.OK);

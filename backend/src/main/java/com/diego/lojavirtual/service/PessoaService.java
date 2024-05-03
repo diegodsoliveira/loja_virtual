@@ -1,17 +1,16 @@
 package com.diego.lojavirtual.service;
 
 import com.diego.lojavirtual.enums.TipoAcesso;
-import com.diego.lojavirtual.model.PessoaFisica;
-import com.diego.lojavirtual.model.PessoaJuridica;
-import com.diego.lojavirtual.model.Usuario;
+import com.diego.lojavirtual.model.*;
 import com.diego.lojavirtual.model.dto.CepDTO;
+import com.diego.lojavirtual.model.dto.cnpjws.ConsultaCnpjDTO;
+import com.diego.lojavirtual.repository.EnderecoRepository;
 import com.diego.lojavirtual.repository.PessoaFisicaRepository;
 import com.diego.lojavirtual.repository.PessoaJuridicaRepository;
 import com.diego.lojavirtual.repository.UsuarioRepository;
 import com.diego.lojavirtual.util.ValidaCnpj;
 import com.diego.lojavirtual.util.ValidaCpf;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,6 +32,8 @@ public class PessoaService {
     @Autowired private PessoaFisicaRepository pessoaFisicaRepository;
 
     @Autowired private EmailService emailService;
+
+    @Autowired private EnderecoRepository enderecoRepository;
 
 
     public PessoaJuridica salvarPessoaJuridica(PessoaJuridica pessoaJuridica) {
@@ -128,4 +129,38 @@ public class PessoaService {
         return new RestTemplate().getForEntity("https://viacep.com.br/ws/"+cep+"/json/", CepDTO.class).getBody();
     }
 
+    public ConsultaCnpjDTO consultaCnpjReceitaWs(String cnpj) {
+        return new RestTemplate().getForEntity("https://receitaws.com.br/v1/cnpj/"+cnpj, ConsultaCnpjDTO.class).getBody();
+    }
+
+    public void cadastraEndereco(Pessoa pessoa) {
+        for (int i = 0; i < pessoa.getEnderecos().size(); i++) {
+            CepDTO cepDTO = consultaCep(pessoa.getEnderecos().get(i).getCep());
+
+            pessoa.getEnderecos().get(i).setBairro(cepDTO.getBairro());
+            pessoa.getEnderecos().get(i).setCidade(cepDTO.getLocalidade());
+            pessoa.getEnderecos().get(i).setComplemento(cepDTO.getComplemento());
+            pessoa.getEnderecos().get(i).setRuaLogradouro(cepDTO.getLogradouro());
+            pessoa.getEnderecos().get(i).setUf(cepDTO.getUf());
+            pessoa.getEnderecos().get(i).setNumero(cepDTO.getComplemento());
+        }
+
+    }
+
+    public void atualizaEndereco(Pessoa pessoa) {
+        for (int i = 0; i < pessoa.getEnderecos().size(); i++) {
+            Endereco endereco = enderecoRepository.findById(pessoa.getEnderecos().get(i).getId()).get();
+
+            if (!endereco.getCep().equals(pessoa.getEnderecos().get(i).getCep())) {
+                CepDTO cepDTO = consultaCep(pessoa.getEnderecos().get(i).getCep());
+
+                pessoa.getEnderecos().get(i).setBairro(cepDTO.getBairro());
+                pessoa.getEnderecos().get(i).setCidade(cepDTO.getLocalidade());
+                pessoa.getEnderecos().get(i).setComplemento(cepDTO.getComplemento());
+                pessoa.getEnderecos().get(i).setRuaLogradouro(cepDTO.getLogradouro());
+                pessoa.getEnderecos().get(i).setUf(cepDTO.getUf());
+                pessoa.getEnderecos().get(i).setNumero(cepDTO.getComplemento());
+            }
+        }
+    }
 }

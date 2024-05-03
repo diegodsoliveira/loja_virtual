@@ -3,7 +3,8 @@ package com.diego.lojavirtual.enums;
 public enum TipoPessoa {
 
     FISICA("FÍSICA"),
-    JURIDICA("JURÍDICA");
+    JURIDICA("JURÍDICA"),
+    JURIDICA_FORNECEDOR("JURÍDICA E FORNECEDOR");
 
     private String descricao;
 
