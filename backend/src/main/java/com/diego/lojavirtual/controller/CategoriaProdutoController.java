@@ -1,9 +1,7 @@
 package com.diego.lojavirtual.controller;
 
-import com.diego.lojavirtual.exceptions.CustomException;
-import com.diego.lojavirtual.exceptions.DataIntegrityViolationException;
-import com.diego.lojavirtual.model.CategoriaProduto;
 import com.diego.lojavirtual.dtos.CategoriaProdutoDTO;
+import com.diego.lojavirtual.model.CategoriaProduto;
 import com.diego.lojavirtual.service.CategoriaProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,7 +39,6 @@ public class CategoriaProdutoController {
 
         return ResponseEntity.ok().body(new CategoriaProdutoDTO(obj));
     }
-
 
     @PostMapping(value = "**/create/{idEmpresa}")
     public ResponseEntity<CategoriaProdutoDTO> create(@PathVariable("idEmpresa") Long idEmpresa, @RequestBody @Valid CategoriaProduto categoriaProduto) {
