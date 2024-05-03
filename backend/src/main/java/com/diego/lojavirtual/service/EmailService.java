@@ -1,6 +1,8 @@
 package com.diego.lojavirtual.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.mail.*;
@@ -10,11 +12,15 @@ import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
+@Component
 @Service
 public class EmailService {
 
-    private String login = "contato@viajarabessa.com.br";
-    private String senha = "";
+    @Value("${app.email.username}")
+    private String login;
+
+    @Value("${app.email.password}")
+    private String senha;
 
     @Async
     public void enviarEmailHtml(String assunto, String mensagem, String emailDestino) throws MessagingException, UnsupportedEncodingException {
