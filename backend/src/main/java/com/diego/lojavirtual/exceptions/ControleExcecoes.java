@@ -1,6 +1,6 @@
 package com.diego.lojavirtual.exceptions;
 
-import com.diego.lojavirtual.model.dto.ObjetoErroDto;
+import com.diego.lojavirtual.dtos.ObjetoErroDto;
 import com.diego.lojavirtual.service.EmailService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.exception.ConstraintViolationException;

@@ -1,7 +1,9 @@
 package com.diego.lojavirtual.controller;
 
+import com.diego.lojavirtual.exceptions.CustomException;
+import com.diego.lojavirtual.exceptions.DataIntegrityViolationException;
 import com.diego.lojavirtual.model.CategoriaProduto;
-import com.diego.lojavirtual.model.dto.CategoriaProdutoDTO;
+import com.diego.lojavirtual.dtos.CategoriaProdutoDTO;
 import com.diego.lojavirtual.service.CategoriaProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,9 +34,18 @@ public class CategoriaProdutoController {
         return ResponseEntity.ok().body(listDTO);
     }
 
+    @GetMapping(value = "/findByDesc/{catDesc}")
+    public ResponseEntity<CategoriaProdutoDTO> findByDesc(@PathVariable("catDesc") String catDesc) {
+
+        CategoriaProduto obj = categoriaProdutoService.findByDesc(catDesc);
+
+        return ResponseEntity.ok().body(new CategoriaProdutoDTO(obj));
+    }
+
 
     @PostMapping(value = "**/create/{idEmpresa}")
     public ResponseEntity<CategoriaProdutoDTO> create(@PathVariable("idEmpresa") Long idEmpresa, @RequestBody @Valid CategoriaProduto categoriaProduto) {
+
         CategoriaProduto newObj = categoriaProdutoService.save(idEmpresa, categoriaProduto);
 
         return ResponseEntity.ok().body(new CategoriaProdutoDTO(newObj));
@@ -48,7 +59,7 @@ public class CategoriaProdutoController {
     }
 
     @DeleteMapping(value = "**/{id}")
-    public ResponseEntity<String> update(@PathVariable("id") Long id) {
+    public ResponseEntity<String> deleteById(@PathVariable("id") Long id) {
         String nomeCat = categoriaProdutoService.findById(id).getNomeDesc();
         categoriaProdutoService.delete(id);
         return new ResponseEntity<String>("Categoria " + nomeCat + " deletada com sucesso.", HttpStatus.OK);

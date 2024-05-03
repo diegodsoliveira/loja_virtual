@@ -1,10 +1,10 @@
 package com.diego.lojavirtual.service;
 
+import com.diego.lojavirtual.dtos.CepDTO;
+import com.diego.lojavirtual.dtos.cnpjws.ConsultaCnpjDTO;
 import com.diego.lojavirtual.enums.TipoAcesso;
 import com.diego.lojavirtual.exceptions.ObjectNotFoundException;
 import com.diego.lojavirtual.model.*;
-import com.diego.lojavirtual.model.dto.CepDTO;
-import com.diego.lojavirtual.model.dto.cnpjws.ConsultaCnpjDTO;
 import com.diego.lojavirtual.repository.EnderecoRepository;
 import com.diego.lojavirtual.repository.PessoaFisicaRepository;
 import com.diego.lojavirtual.repository.PessoaJuridicaRepository;
@@ -20,22 +20,30 @@ import org.springframework.web.client.RestTemplate;
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PessoaService {
 
-    @Autowired private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-    @Autowired private UsuarioRepository usuarioRepository;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
-    @Autowired private PessoaJuridicaRepository pessoaJuridicaRepository;
+    @Autowired
+    private PessoaJuridicaRepository pessoaJuridicaRepository;
 
-    @Autowired private PessoaFisicaRepository pessoaFisicaRepository;
+    @Autowired
+    private PessoaFisicaRepository pessoaFisicaRepository;
 
-    @Autowired private EmailService emailService;
+    @Autowired
+    private EmailService emailService;
 
-    @Autowired private EnderecoRepository enderecoRepository;
+    @Autowired
+    private EnderecoRepository enderecoRepository;
 
 
     public PessoaJuridica salvarPessoaJuridica(PessoaJuridica pessoaJuridica) {
@@ -128,14 +136,22 @@ public class PessoaService {
     }
 
     public CepDTO consultaCep(String cep) {
-        return new RestTemplate().getForEntity("https://viacep.com.br/ws/"+cep+"/json/", CepDTO.class).getBody();
+        return new RestTemplate().getForEntity("https://viacep.com.br/ws/" + cep + "/json/", CepDTO.class).getBody();
     }
 
     public ConsultaCnpjDTO consultaCnpjReceitaWs(String cnpj) {
-        return new RestTemplate().getForEntity("https://receitaws.com.br/v1/cnpj/"+cnpj, ConsultaCnpjDTO.class).getBody();
+        return new RestTemplate().getForEntity("https://receitaws.com.br/v1/cnpj/" + cnpj, ConsultaCnpjDTO.class).getBody();
     }
 
+    // verificar esta lógica depois
+
     public void cadastraEndereco(Pessoa pessoa) {
+
+        List<CepDTO> cepDTOList = pessoa.getEnderecos()
+                .stream()
+                .map(CepDTO::new)
+                .collect(Collectors.toList());
+/*
         for (int i = 0; i < pessoa.getEnderecos().size(); i++) {
             CepDTO cepDTO = consultaCep(pessoa.getEnderecos().get(i).getCep());
 
@@ -146,7 +162,7 @@ public class PessoaService {
             pessoa.getEnderecos().get(i).setUf(cepDTO.getUf());
             pessoa.getEnderecos().get(i).setNumero(cepDTO.getComplemento());
         }
-
+        */
     }
 
     public void atualizaEndereco(Pessoa pessoa) {
@@ -170,4 +186,5 @@ public class PessoaService {
         Optional<PessoaJuridica> obj = pessoaJuridicaRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("ID empresa não encontrado. Id: " + id));
     }
+
 }

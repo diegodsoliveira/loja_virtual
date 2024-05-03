@@ -1,4 +1,4 @@
-package com.diego.lojavirtual.model.dto.cnpjws;
+package com.diego.lojavirtual.dtos.cnpjws;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

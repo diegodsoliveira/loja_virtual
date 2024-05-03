@@ -1,4 +1,4 @@
-package com.diego.lojavirtual.model.dto;
+package com.diego.lojavirtual.dtos;
 
 import com.diego.lojavirtual.model.CategoriaProduto;
 import org.hibernate.validator.constraints.Length;

@@ -1,4 +1,6 @@
-package com.diego.lojavirtual.model.dto;
+package com.diego.lojavirtual.dtos;
+
+import com.diego.lojavirtual.model.Endereco;
 
 public class CepDTO {
 
@@ -12,6 +14,28 @@ public class CepDTO {
     private String gia;
     private String ddd;
     private String siafi;
+    private String numero;
+
+    public CepDTO() {
+    }
+
+    public CepDTO(Endereco endereco) {
+        this.cep = endereco.getCep();
+        this.logradouro = endereco.getRuaLogradouro();
+        this.complemento = endereco.getComplemento();
+        this.bairro = endereco.getBairro();
+        this.localidade = endereco.getCidade();
+        this.uf = endereco.getUf();
+        this.numero = endereco.getNumero();
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
 
     public String getCep() {
         return cep;
