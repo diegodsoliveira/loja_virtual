@@ -1,5 +1,6 @@
 package com.diego.lojavirtual.service;
 
+import com.diego.lojavirtual.dtos.ProdutoDto;
 import com.diego.lojavirtual.exceptions.ObjectNotFoundException;
 import com.diego.lojavirtual.model.CategoriaProduto;
 import com.diego.lojavirtual.model.PessoaJuridica;
@@ -23,7 +24,7 @@ public class ProdutoService {
 
     public Produto save(Long idEmpresa, Produto produto) {
 
-        if (!existeCategoria(produto.getNome())) {
+        if (!existeProduto(produto.getNome())) {
             PessoaJuridica obj = pessoaPjService.findPjById(idEmpresa);
             produto.setId(null);
             produto.setEmpresa(obj);
@@ -33,20 +34,21 @@ public class ProdutoService {
         return produto;
     }
 
-    public Produto findById(Long id) {
+    public Optional<Produto> findById(Long id) {
         Optional<Produto> obj = produtoRepository.findById(id);
-        return obj.orElseThrow(() -> new ObjectNotFoundException("Categoria não encontrada! Id: " + id + ", Tipo: " + CategoriaProduto.class.getName()));
+        return Optional.ofNullable(obj.orElseThrow(() -> new ObjectNotFoundException(
+                "Produto não encontrado! Id: " + id + ", Tipo: " + CategoriaProduto.class.getName())));
     }
 
-    public Produto findByDesc(String produtoDesc) {
-        return produtoRepository.findByName(produtoDesc);
+    public List<Produto> findByName(String produtoNome) {
+        return produtoRepository.findByName(produtoNome);
     }
 
     public List<Produto> findAll() {
         return produtoRepository.findAll();
     }
 
-    public boolean existeCategoria(String produtoDesc) {
+    public boolean existeProduto(String produtoDesc) {
         if (produtoRepository.existeProduto(produtoDesc)) {
             throw new com.diego.lojavirtual.exceptions.DataIntegrityViolationException(
                     "O produto informado já existe. O sistema não permite produtos duplicados. Por favor, informe um produto único");
@@ -56,10 +58,15 @@ public class ProdutoService {
     }
 
 
-    public Produto update(Produto produto) {
-        Produto obj = findById(produto.getId());
-        obj.setNomeDesc(produto.getNomeDesc());
-        return produtoRepository.save(obj);
+    public Object update(Produto produto) {
+        Optional<Produto> obj = findById(produto.getId());
+
+        if (obj.isPresent()) {
+            ProdutoDto dto = new ProdutoDto(produto);
+            return dto;
+        }
+
+        return produto;
     }
 
     public void delete(Long id) {

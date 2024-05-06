@@ -12,7 +12,7 @@ import java.util.Optional;
 @Transactional
 public interface CategoriaProdutoRepository extends JpaRepository<CategoriaProduto, Long> {
 
-    @Query(nativeQuery = true, value = "select * from categoria_produto where upper(trim(nome_desc)) = ?1;")
+    @Query(nativeQuery = true, value = "select count(1) > 0 from categoria_produto where upper(trim(nome_desc)) = ?1;")
     boolean existeCategoria(String nomeCategoria);
 
     @Query(value = "select cp from CategoriaProduto cp where upper(trim(nome_desc)) like %?1%")

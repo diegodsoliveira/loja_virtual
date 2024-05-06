@@ -22,7 +22,7 @@ public class ProdutoController {
     private ProdutoService produtoService;
 
     @ResponseBody
-    @PostMapping(value = "**/salvarAcesso")
+    @PostMapping(value = "**/save")
     public ResponseEntity<?> save(@RequestBody Produto produto) {
 
         if (produto.getId() == null) {
@@ -33,44 +33,35 @@ public class ProdutoController {
             }
         }
 
-        Produto acessoSalvo = produtoService.save(produto);
-        return new ResponseEntity<Acesso>(acessoSalvo, HttpStatus.OK);
+        Produto obj = produtoService.save(produto.);
+        return new ResponseEntity<Produto>(obj, HttpStatus.OK);
     }
 
-    @GetMapping(value = "**/buscarPorDesc/{desc}")
-    public ResponseEntity<List<Produto>> buscarPorDesc(@PathVariable("desc") String desc) {
+    @GetMapping(value = "**/findByName/{name}")
+    public ResponseEntity<List<Produto>> buscarPorDesc(@PathVariable("name") String name) {
 
-        List<Produto> acessos = produtoService.buscarAcessoDesc(desc.toUpperCase());
+        List<Produto> produtos = produtoService.findByName(name.toUpperCase());
 
-        return new ResponseEntity<List<Acesso>>(acessos, HttpStatus.OK);
+        return new ResponseEntity<List<Produto>>(produtos, HttpStatus.OK);
     }
 
-    @GetMapping(value = "**/buscarPorId/{id}")
-    public ResponseEntity<Produto> findById(@PathVariable("id") Long idAcesso) {
+    @GetMapping(value = "**/findById/{id}")
+    public ResponseEntity<Produto> findById(@PathVariable("id") Long idProduto) {
 
-        Produto acesso = produtoService.findById(idAcesso).get();
+        Produto produto = produtoService.findById(idProduto).get();
 
-        return new ResponseEntity<Acesso>(acesso,HttpStatus.OK);
+        return new ResponseEntity<Produto>(produto,HttpStatus.OK);
     }
 
-    @GetMapping(value = "*/obterAcesso/{id}")
-    public ResponseEntity<Produto> findAccessById(@PathVariable("id") Long idAcesso) {
-
-        return produtoService.findById(idAcesso)
-                .map(acesso -> ResponseEntity.ok().body(new Acesso(acesso)))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não encontrado."));
-
-    }
-
-    @DeleteMapping("**/deleteAcesso")
-    public ResponseEntity<String> delete(@RequestBody Acesso acesso) {
-        Optional<Produto> optional = produtoService.findById(acesso.getId());
+    @DeleteMapping("**/deleteProdutoById")
+    public ResponseEntity<String> delete(@RequestBody Produto produto) {
+        Optional<Produto> optional = produtoService.findById(produto.getId());
 
         if (optional.isPresent()) {
-            produtoService.deleteById(acesso.getId());
-            return ResponseEntity.ok().body("Acesso " + optional.get().getDescricao() + " deletado com sucesso.");
+            produtoService.delete(produto.getId());
+            return ResponseEntity.ok().body("Produto " + optional.get().getNome() + " deletado com sucesso.");
         } else {
-            return ResponseEntity.badRequest().body("Acesso não encontrado.");
+            return ResponseEntity.badRequest().body("Produto não encontrado.");
         }
     }
 
