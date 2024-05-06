@@ -33,7 +33,7 @@ public class ProdutoController {
             }
         }
 
-        Produto obj = produtoService.save(produto.);
+        Produto obj = produtoService.save(produto.getEmpresa().getId(), produto);
         return new ResponseEntity<Produto>(obj, HttpStatus.OK);
     }
 
