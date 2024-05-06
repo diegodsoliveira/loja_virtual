@@ -1,6 +1,10 @@
 package com.diego.lojavirtual.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -15,15 +19,20 @@ public class Produto implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_produto")
     private Long id;
 
+    @NotNull(message = "O campo TIPO UNIDADE é obrigatório.")
     @Column(nullable = false)
     private String tipoUnidade;
+
     @Column(nullable = false)
+    @NotNull(message = "O campo NOME é obrigatório.")
     private String nome;
 
+    @NotNull(message = "O campo DESCRIÇÃO é obrigatório.")
     @Column(columnDefinition = "text", length = 2000, nullable = false)
     private String descricao;
 
     @Column(nullable = false)
+    @NotNull(message = "O campo ATIVO é obrigatório.")
     private Boolean ativo = Boolean.TRUE;
 
 
@@ -31,15 +40,26 @@ public class Produto implements Serializable {
 
 
     @Column(nullable = false)
+    @NotNull(message = "O campo PESO é obrigatório.")
     private Double peso;
+
     @Column(nullable = false)
+    @NotNull(message = "O campo LARGURA é obrigatório.")
     private Double largura;
+
     @Column(nullable = false)
+    @NotNull(message = "O campo ALTURA é obrigatório.")
     private Double altura;
+
     @Column(nullable = false)
+    @NotNull(message = "O campo PROFUNDIDADE é obrigatório.")
     private Double profundidade;
+
     @Column(nullable = false)
+    @NotNull(message = "O campo DESCRIÇÃO é obrigatório.")
     private BigDecimal valorVenda = BigDecimal.ZERO;
+
+    @NotNull(message = "O campo QTDE ESTOQUE é obrigatório.")
     @Column(nullable = false)
     private Integer qtdEstoque = 0;
     private Integer qtdAlertaEstoque = 0;
@@ -49,13 +69,13 @@ public class Produto implements Serializable {
 
     @ManyToOne(targetEntity = Pessoa.class)
     @JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-    private Pessoa empresa;
+    private PessoaJuridica empresa;
 
     public Pessoa getEmpresa() {
         return empresa;
     }
 
-    public void setEmpresa(Pessoa empresa) {
+    public void setEmpresa(PessoaJuridica empresa) {
         this.empresa = empresa;
     }
 

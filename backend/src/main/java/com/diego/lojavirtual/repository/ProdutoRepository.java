@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 @Transactional
 public interface ProdutoRepository extends JpaRepository<Produto, Long> {
-    @Query(nativeQuery = true, value = "select * from produto where upper(trim(nome)) = ?1;")
+    @Query(nativeQuery = true, value = "select count(1) > 0 from produto where upper(trim(nome)) = upper(trim(?1));")
     boolean existeProduto(String nomeProduto);
 
     @Query(value = "select p from Produto p where upper(trim(nome)) like %?1%")

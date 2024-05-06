@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
 @Transactional
 @RestController
 @RequestMapping(value = "/produtos")
+@Valid
 public class ProdutoController {
 
     @Autowired
@@ -23,7 +25,7 @@ public class ProdutoController {
 
     @ResponseBody
     @PostMapping(value = "**/save")
-    public ResponseEntity<?> save(@RequestBody Produto produto) {
+    public ResponseEntity<?> save(@RequestBody @Valid Produto produto) {
 
         if (produto.getId() == null) {
             List<Produto> produtos = produtoService.findByName(produto.getNome());
