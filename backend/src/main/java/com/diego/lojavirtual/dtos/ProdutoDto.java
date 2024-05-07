@@ -1,7 +1,6 @@
 package com.diego.lojavirtual.dtos;
 
-import com.diego.lojavirtual.model.Pessoa;
-import com.diego.lojavirtual.model.Produto;
+import com.diego.lojavirtual.model.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,9 +16,6 @@ public class ProdutoDto implements Serializable {
     private String nome;
     private String descricao;
     private Boolean ativo = Boolean.TRUE;
-
-    // associar nota item produto
-
     private Double peso;
     private Double largura;
     private Double altura;
@@ -31,6 +27,9 @@ public class ProdutoDto implements Serializable {
     private Boolean alertaQtdEstoque = Boolean.FALSE;
     private Integer qtdClique = 0;
     private Pessoa empresa;
+    private CategoriaProduto categoriaProduto;
+    private MarcaProduto marcaProduto;
+    private NotaItemProduto notaItemProduto;
 
     public ProdutoDto(Produto produto) {
         this.id = produto.getId();
@@ -49,6 +48,33 @@ public class ProdutoDto implements Serializable {
         this.alertaQtdEstoque = produto.getAlertaQtdEstoque();
         this.qtdClique = produto.getQtdClique();
         this.empresa = produto.getEmpresa();
+        this.categoriaProduto = produto.getCategoriaProduto();
+        this.marcaProduto = produto.getMarcaProduto();
+        this.notaItemProduto = produto.getNotaItemProduto();
+    }
+
+    public NotaItemProduto getNotaItemProduto() {
+        return notaItemProduto;
+    }
+
+    public void setNotaItemProduto(NotaItemProduto notaItemProduto) {
+        this.notaItemProduto = notaItemProduto;
+    }
+
+    public CategoriaProduto getCategoriaProduto() {
+        return categoriaProduto;
+    }
+
+    public void setCategoriaProduto(CategoriaProduto categoriaProduto) {
+        this.categoriaProduto = categoriaProduto;
+    }
+
+    public MarcaProduto getMarcaProduto() {
+        return marcaProduto;
+    }
+
+    public void setMarcaProduto(MarcaProduto marcaProduto) {
+        this.marcaProduto = marcaProduto;
     }
 
     public ProdutoDto() {

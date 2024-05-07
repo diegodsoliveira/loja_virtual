@@ -3,6 +3,7 @@ package com.diego.lojavirtual.service;
 import com.diego.lojavirtual.dtos.ProdutoDto;
 import com.diego.lojavirtual.exceptions.ObjectNotFoundException;
 import com.diego.lojavirtual.model.CategoriaProduto;
+import com.diego.lojavirtual.model.MarcaProduto;
 import com.diego.lojavirtual.model.PessoaJuridica;
 import com.diego.lojavirtual.model.Produto;
 import com.diego.lojavirtual.repository.ProdutoRepository;
@@ -22,12 +23,19 @@ public class ProdutoService {
     @Autowired
     private ProdutoRepository produtoRepository;
 
+    @Autowired private CategoriaProdutoService categoriaProdutoService;
+
     public Produto save(Long idEmpresa, Produto produto) {
 
         if (!existeProduto(produto.getNome())) {
             PessoaJuridica obj = pessoaPjService.findPjById(idEmpresa);
+            CategoriaProduto cat = categoriaProdutoService.findById(produto.getId());
+
+            // validar marca e Nota Item produto
+
             produto.setId(null);
             produto.setEmpresa(obj);
+            produto.setCategoriaProduto(cat);
 
             return produtoRepository.save(produto);
         }

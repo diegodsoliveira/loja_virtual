@@ -1,10 +1,7 @@
 package com.diego.lojavirtual.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -25,6 +22,7 @@ public class Produto implements Serializable {
 
     @Column(nullable = false)
     @NotNull(message = "O campo NOME é obrigatório.")
+    @Size(min = 10, message = "O nome deve ter no mínimo 10 caracteres.")
     private String nome;
 
     @NotNull(message = "O campo DESCRIÇÃO é obrigatório.")
@@ -68,8 +66,48 @@ public class Produto implements Serializable {
     private Integer qtdClique = 0;
 
     @ManyToOne(targetEntity = Pessoa.class)
+    @NotNull(message = "A empresa responsável deve ser informada.")
     @JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
     private PessoaJuridica empresa;
+
+    @ManyToOne(targetEntity = CategoriaProduto.class)
+    @NotNull(message = "O campo CATEGORIA é obrigatório.")
+    @JoinColumn(name = "categoria_produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "categoria_produto_id_fk"))
+    private CategoriaProduto categoriaProduto;
+
+    @ManyToOne(targetEntity = MarcaProduto.class)
+    @NotNull(message = "O campo MARCA PRODUTO é obrigatório.")
+    @JoinColumn(name = "marca_produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "marca_produto_id_fk"))
+    private MarcaProduto marcaProduto;
+
+    @ManyToOne(targetEntity = NotaItemProduto.class)
+    @NotNull(message = "O campo MARCA PRODUTO é obrigatório.")
+    @JoinColumn(name = "nota_item_produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "nota_item_produto_id_fk"))
+    private NotaItemProduto notaItemProduto;
+
+    public @NotNull(message = "O campo MARCA PRODUTO é obrigatório.") NotaItemProduto getNotaItemProduto() {
+        return notaItemProduto;
+    }
+
+    public void setNotaItemProduto(@NotNull(message = "O campo MARCA PRODUTO é obrigatório.") NotaItemProduto notaItemProduto) {
+        this.notaItemProduto = notaItemProduto;
+    }
+
+    public MarcaProduto getMarcaProduto() {
+        return marcaProduto;
+    }
+
+    public void setMarcaProduto(MarcaProduto marcaProduto) {
+        this.marcaProduto = marcaProduto;
+    }
+
+    public CategoriaProduto getCategoriaProduto() {
+        return categoriaProduto;
+    }
+
+    public void setCategoriaProduto(CategoriaProduto categoriaProduto) {
+        this.categoriaProduto = categoriaProduto;
+    }
 
     public Pessoa getEmpresa() {
         return empresa;
