@@ -81,15 +81,15 @@ public class Produto implements Serializable {
     private MarcaProduto marcaProduto;
 
     @ManyToOne(targetEntity = NotaItemProduto.class)
-    @NotNull(message = "O campo MARCA PRODUTO é obrigatório.")
+    @NotNull(message = "O campo NOTA ITEM PRODUTO é obrigatório.")
     @JoinColumn(name = "nota_item_produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "nota_item_produto_id_fk"))
     private NotaItemProduto notaItemProduto;
 
-    public @NotNull(message = "O campo MARCA PRODUTO é obrigatório.") NotaItemProduto getNotaItemProduto() {
+    public NotaItemProduto getNotaItemProduto() {
         return notaItemProduto;
     }
 
-    public void setNotaItemProduto(@NotNull(message = "O campo MARCA PRODUTO é obrigatório.") NotaItemProduto notaItemProduto) {
+    public void setNotaItemProduto(NotaItemProduto notaItemProduto) {
         this.notaItemProduto = notaItemProduto;
     }
 
