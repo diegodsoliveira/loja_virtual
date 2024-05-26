@@ -31,15 +31,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements H
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .disable().authorizeRequests().antMatchers("/").permitAll()
-                .antMatchers("/index").permitAll()
-                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .anyRequest().authenticated().and().logout().logoutSuccessUrl("/index")
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-
-                .and().addFilterBefore(new JWTLoginFilter("/login", authenticationManager()),
-                        UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JWTApiAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http
+                .csrf()
+                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                    .disable()
+                .authorizeRequests()
+                    .antMatchers("/" , "/index").permitAll()
+                    .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                    .antMatchers("/webhook/**").permitAll()
+                    .anyRequest().authenticated()
+                .and()
+                    .logout().logoutSuccessUrl("/index")
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .and()
+                    .addFilterBefore(new JWTLoginFilter("/login", authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                    .addFilterBefore(new JWTApiAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }

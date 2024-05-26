@@ -147,11 +147,6 @@ public class PessoaService {
 
     public void cadastraEndereco(Pessoa pessoa) {
 
-        List<CepDTO> cepDTOList = pessoa.getEnderecos()
-                .stream()
-                .map(CepDTO::new)
-                .collect(Collectors.toList());
-/*
         for (int i = 0; i < pessoa.getEnderecos().size(); i++) {
             CepDTO cepDTO = consultaCep(pessoa.getEnderecos().get(i).getCep());
 
@@ -162,7 +157,6 @@ public class PessoaService {
             pessoa.getEnderecos().get(i).setUf(cepDTO.getUf());
             pessoa.getEnderecos().get(i).setNumero(cepDTO.getComplemento());
         }
-        */
     }
 
     public void atualizaEndereco(Pessoa pessoa) {
