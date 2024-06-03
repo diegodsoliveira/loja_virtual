@@ -29,9 +29,9 @@ public class EmailService {
         properties.put("mail.smtp.ssl.trust", "*");
         properties.put("mail.smtp.auth", "true");
         properties.put("mail.smtp.starttls", "true");
-        properties.put("mail.smtp.host", "smtp.emailemnuvem.com.br");
-        properties.put("mail.smtp.port", "465");
-        properties.put("mail.smtp.socketFactory.port", "465");
+        properties.put("mail.smtp.host", "${app.email.smtp.server}");
+        properties.put("mail.smtp.port", "${app.email.smtp.port}");
+        properties.put("mail.smtp.socketFactory.port", "${app.email.smtp.port}");
         properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 
         Session session = Session.getDefaultInstance(properties, new Authenticator() {
@@ -46,7 +46,7 @@ public class EmailService {
         Address[] toUser = InternetAddress.parse(emailDestino);
 
         Message message = new MimeMessage(session);
-        message.setFrom(new InternetAddress(login, "Diego Oliveira", "UTF-8"));
+        message.setFrom(new InternetAddress(login, "${app.email.from.name}", "UTF-8"));
         message.setRecipients(Message.RecipientType.TO, toUser);
         message.setSubject(assunto);
         message.setContent(mensagem, "text/html;charset=utf-8");
